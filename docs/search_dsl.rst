@@ -37,8 +37,7 @@ Search DSL
 
     s = Search(client)
 
-You can also define the client at a later time (for more options see the
-~:ref:`connections` chapter):
+クライアントを後から定義することも可能です(:ref:`connections` の章でさらにオプションを知ることができます) :
 
 .. code:: python
 
@@ -46,11 +45,9 @@ You can also define the client at a later time (for more options see the
 
 .. note::
 
-    All methods return a *copy* of the object, making it safe to pass to
-    outside code.
+    すべてのメソッドはオブジェクトのコピーを返却するため、外部のコードへ安全に渡すことができます。
 
-The API is chainable, allowing you to combine multiple method calls in one
-statement:
+このAPIはチェーンが可能で、1つのステートメント内に複数のメソッド呼び出しを記述可能です:
 
 .. code:: python
 
@@ -58,19 +55,17 @@ statement:
 
 .. note::
 
-    In some cases this approach is not possible due to python's restriction on
-    identifiers - for example if your field is called ``@timestamp``. In that
-    case you have to fall back to unpacking a dictionary: ``s.query('range', **
-    {'@timestamp': {'lt': 'now'}})``
+    識別子において、Pythonの制約によりこのアプローチが難しいケースもあります。
+    例えば、呼び出したいフィールドが ``@timestamp`` の場合は
+    辞書として括り出すことで代替します: ``s.query('range', **{'@timestamp': {'lt': 'now'}})``
 
-To send the request to Elasticsearch:
+リクエストをElasticsearchに送ります:
 
 .. code:: python
 
     response = s.execute()
 
-For debugging purposes you can serialize the ``Search`` object to a ``dict``
-explicitly:
+デバッグをしたいときは ``Search`` オブジェクトを ``dict`` にシリアライズすることができます:
 
 .. code:: python
 
@@ -172,15 +167,13 @@ to directly construct the combined query:
     s = Search().query(q)
 
 
-Filters
+フィルタ
 ~~~~~~~
 
-Filters behave similarly to queries - just use the ``F`` shortcut and
-``.filter()`` method. When you use the ``.filter()`` method, the query will be
-automatically wrapped in a ``filtered`` query.
+フィルタはクエリと似たように振る舞います。 - ``.filter()`` メソッドのショートカットとして ``F`` を使用します。
+``.filter()`` メソッドを使用するときには、クエリが自動的に ``filtered`` クエリの中にラップされます。
 
-If you want to use the post_filter element for faceted navigation, use the
-``.post_filter()`` method.
+ファセットナビゲーションの実装にpost_filterを使用したいときは、 ``.post_filter`` メソッドを使用します。
 
 
 集約
@@ -227,8 +220,8 @@ If you want to use the post_filter element for faceted navigation, use the
     #     }
     #   }
     # }
-    
-or
+
+あるいは
 
 .. code:: python
 
@@ -270,10 +263,10 @@ or
 集約の定義はオブジェクトそのものに実行されます。
 
 
-Sorting
+ソート
 ~~~~~~~
 
-To specify sorting order, use the ``.sort()`` method:
+ソートの順序を指定するためには、 ``.sort()`` メソッドを使用します:
 
 .. code:: python
 
@@ -283,21 +276,20 @@ To specify sorting order, use the ``.sort()`` method:
         {"lines" : {"order" : "asc", "mode" : "avg"}}
     )
 
-It accepts positional arguments which can be either strings or dictionaries.
-String value is a field name, optionally prefixed by the ``-`` sign to specify
-a descending order.
+このメソッドは位置指定引数で文字列か辞書を受け取ります。
+文字列の値はフィールド名で、オプションとして ``-`` を指定すれば降順になります。
 
-To reset the sorting, just call the method with no arguments:
+ソートをリセットするためには、引数なしでこのメソッドを呼び出します:
 
 .. code:: python
 
   s = s.sort()
 
 
-Pagination
+ページネーション
 ~~~~~~~~~~
 
-To specify the from/size parameters, use the Python slicing API:
+開始位置や件数を指定するためには、PythonのスライスAPIを使用します:
 
 .. code:: python
 
@@ -305,16 +297,16 @@ To specify the from/size parameters, use the Python slicing API:
   # {"from": 10, "size": 10}
 
 
-Highlighting
+ハイライト
 ~~~~~~~~~~~~
 
-To set common attributes for highlighting use the ``highlight_options`` method:
+ハイライトのための共通の属性を設定するためには、 ``highlight_options`` メソッドを使用します:
 
 .. code:: python
 
     s = s.highlight_options(order='score')
 
-Enabling highlighting for individual fields is done using the ``highlight`` method:
+``highlight`` メソッドを使用することで、それぞれのフィールドのハイライトが可能になります:
 
 .. code:: python
 
@@ -322,8 +314,9 @@ Enabling highlighting for individual fields is done using the ``highlight`` meth
     # or, including parameters:
     s = s.highlight('title', fragment_size=50)
 
-The fragments in the response will then be available on reach ``Result`` object
-as ``.meta.highlight.FIELD`` which will contain the list of fragments:
+レスポンス内でハイライトされる要素を利用する場合は
+``.meta.highlight.FIELD`` を使って ``Result`` オブジェクトにアクセスします。
+これはハイライトされる要素のリストを含んでいます:
 
 .. code:: python
 
@@ -332,55 +325,53 @@ as ``.meta.highlight.FIELD`` which will contain the list of fragments:
         for fragment in hit.meta.highlight.title:
             print(fragment)
 
-Suggestions
+サジェスト
 ~~~~~~~~~~~
 
-To specify a suggest request on your ``Search`` object use the ``suggest`` method:
+``Search`` オブジェクトにおいてサジェストのリクエストを指定するために、 ``suggest`` メソッドを使用します:
 
 .. code:: python
 
     s = s.suggest('my_suggestion', 'pyhton', term={'field': 'title'})
 
-The first argument is the name of the suggestions (name under which it will be
-returned), second is the actual text you wish the suggester to work on and the
-keyword arguments will be added to the suggest's json as-is.
+最初の引数は返却される際のサジェストの名前で、2つ目の引数はサジェストが必要な文字列を示します。
+キーワード引数はサジェスト用のjsonにそのままで追加されます。
 
-Extra properties and parameters
+その他のプロパティとパラメータ
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To set extra properties of the search request, use the ``.extra()`` method:
+検索リクエストにおいて他のプロパティを設定するために、 ``.extra()`` メソッドを使用します:
 
 .. code:: python
 
   s = s.extra(explain=True)
- 
-To set query parameters, use the ``.params()`` method:
+
+クエリパラメータを設定するためには、 ``.params()`` メソッドを使用します:
 
 .. code:: python
 
   s = s.params(search_type="count")
 
 
-Serialization and Deserialization
+シリアライズとデシリアライズ
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The search object can be serialized into a dictionary by using the
-``.to_dict()`` method.
+検索用のオブジェクトを ``.to_dict()`` メソッドを使用して辞書型にシリアライズすることができます。
 
-You can also create a ``Search`` object from a ``dict``:
+``dict`` から ``Search`` オブジェクトを生成することも可能です:
 
 .. code:: python
 
   s = Search.from_dict({"query": {"match": {"title": "python"}}})
 
 
-Response
+レスポンス
 --------
 
-You can execute your search by calling the ``.execute()`` method that will return
-a ``Response`` object. The ``Response`` object allows you access to any key
-from the response dictionary via attribute access. It also provides some
-convenient helpers:
+``.execute()`` メソッドをコールすることで検索を行います。
+このメソッドは ``Response`` オブジェクトを返します。
+``Response`` オブジェクトは、アトリビュートへのアクセスとレスポンスを格納した辞書オブジェクトのキーを対応づけます。
+これにより、レスポンスへのアクセスを手助けします:
 
 .. code:: python
 
@@ -388,7 +379,7 @@ convenient helpers:
 
   print(response.success())
   # True
-      
+
   print(response.took)
   # 12
 
@@ -396,15 +387,15 @@ convenient helpers:
 
   print(response.suggest.my_suggestions)
 
-If you want to inspect the contents of the ``response`` objects, just use its
-``to_dict`` method to get access to the raw data for pretty printing.
+``response`` オブジェクトの内容を確認したい場合は、
+``to_dict`` メソッドを利用して、表示用に整形された生のデータにアクセスします。
 
 
-Hits
+件数
 ~~~~
 
-To access to the hits returned by the search, access the ``hits`` property or
-just iterate over the ``Response`` object:
+検索によって返された件数を知るためには、``hits`` プロパティにアクセスするか、
+単純に ``Response`` オブジェクトをイテレートします:
 
 .. code:: python
 
@@ -414,12 +405,12 @@ just iterate over the ``Response`` object:
         print(h.title, h.body)
 
 
-Result
+検索結果
 ~~~~~~
 
-The individual hits is wrapped in a convenience class that allows attribute
-access to the keys in the returned dictionary. All the metadata for the results
-are accessible via ``meta`` (without the leading ``_``):
+それぞれの検索結果は使いやすいかたちでクラスとしてラップされています。
+クラスのアトリビュートから、返却された辞書型オブジェクトのキーにアクセス可能です。
+検索結果に関する全てのメタデータには ``meta`` を通してアクセスすることが可能です(先頭に ``_`` は不要) :
 
 .. code:: python
 
@@ -434,14 +425,12 @@ are accessible via ``meta`` (without the leading ``_``):
     the get item syntax: ``hit['meta']``.
 
 
-Aggregations
+集約
 ~~~~~~~~~~~~
 
-Aggregations are available through the ``aggregations`` property:
+集約の結果には ``aggregations`` プロパティを通してアクセスします。
 
 .. code:: python
 
     for tag in response.aggregations.per_tag.buckets:
         print(tag.key, tag.max_lines.value)
-    
-
