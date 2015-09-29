@@ -421,8 +421,8 @@ to directly construct the combined query:
 
 .. note::
 
-    If your document has a field called ``meta`` you have to access it using
-    the get item syntax: ``hit['meta']``.
+    もしドキュメントが ``meta`` というフィールドを持っている場合は
+    ``hit['meta']`` というシンタックスを使ってアクセスする必要があります。
 
 
 集約
