@@ -1,81 +1,81 @@
 .. _faceted_search:
 
-Faceted Search
+ファセット検索
 ==============
 
-The library comes with a simple abstraction aimed at helping you develop
-faceted navigation for your data.
+このライブラリはファセットナビゲーションの実装を手助けするための
+抽象化された機能を備えています。
 
 .. note::
 
-    This API is experimental and will be subject to change. Any feedback is
-    welcome.
+    この機能は試験的なものであり、変更される可能性があります。
+    フィードバックは歓迎します。
 
-Configuration
+設定
 -------------
 
-You can provide several configuration options (as class attributes) when
-declaring a ``FacetedSearch`` subclass:
+サブクラスである ``FacetSearch`` を宣言するときには、
+いくつかの設定オプションをクラスのアトリビュートとして指定することができます:
 
 ``index``
-  the name of the index (as string) to search through, defaults to ``'_all'``.
+  検索の対象とするインデックス名(文字列型)
+  デフォルト: ``'_all'``
 
 ``doc_types``
-  list of ``DocType`` subclasses or strings to be used, defaults to
-  ``['_all']``.
+  使用する ``DocType`` のサブクラスか文字列(リスト型)
+  デフォルト: ``['_all']``
 
 ``fields``
-  list of fields on the document type to search through. The list will be
-  passes to ``MultiMatch`` query so can contain boost values (``'title^5'``),
-  defaults to ``['*']``.
+  ドキュメントのタイプにおいて検索の対象とするフィールド(リスト型)
+  このリストは ``MultiMatch`` クエリに渡されるもので、ブーストの値(``'title^5'``) を含むことが可能
+  デフォルト: ``['*']``
 
 ``facets``
-  dictionary of facets to display/filter on. The key is the name displayed and
-  values should be a (non nesting) bucket aggregations, for example: ``{'tags':
-  Terms{field='tags'}}``
+  表示あるいは非表示にするファセットを示す辞書(辞書型)
+  キーは表示される際の名前を示し、値はbucket集約に使用される(ネストはしない)
+  例: ``{'tags': Terms{field='tags'}}``
 
-Advanced
+応用
 ~~~~~~~~
 
-If you require any custom behavior or modifications simply override one or more
-of the methods responsible for the class' functions. The two main methods are:
+もし特別な振る舞いや修正が必要な場合は、対象の機能を持つ1個以上のメソッドをオーバーライドします。
+主に2つのメソッドが対象となります:
 
 ``search(self)``
-  is responsible for constructing the ``Search`` object used. Override this if
-  you want to customize the search object (for example by adding a global
-  filter for published articles only).
+  ``Search`` オブジェクトを生成するときに使用されます。
+  もし検索のためのオブジェクトをカスタマイズしたいときはこれをオーバーライドします。
+  (例えば、ある項目だけを表示するためのグローバルなフィルタを加える など)
 
 ``query(self, search)``
-  adds the query postion of the search (if search input specified), by default
-  using ``MultiField`` query. Override this if you want to modify the query type used.
+  検索においてクエリを指定する部分で、デフォルトでは ``MultiField`` クエリを使用します。
+  使用されるクエリのタイプを変更したいときはこれをオーバーライドします。
 
 
-Usage
+使い方
 -----
 
-The custom subclass can be instantiated empty to provide an empty search
-(matching everything) or with ``query`` and ``filters``.
+カスタムサブクラスをインスタンス化するときは、
+(すべてをマッチさせるための) 空の検索を行うために何も指定しないか、
+``query`` と ``filters`` を用いることができます。
 
 ``query``
-  is used to pass in the text of the query to be performed. If ``None`` is
-  passed in (default) a ``MatchAll`` query will be used. For example ``'python
-  web'``
+  実行されるクエリのテキストに値を渡す際に使用します。
+  もし ``None`` (デフォルト) が渡されたときは ``MatchAll`` クエリが使用されます。
+  例: ``'python web'``
 
 ``filters``
-  is a dictionary containing all the facet filters that you wish to apply. Use
-  the name of the facet (from ``.facets`` attribute) as the key and one of the
-  possible values as value. For example ``{'tags': 'python'}``.
+  適用したいファセットフィルタに関するすべての情報を含む辞書です。
+  キーとして(``.facets`` アトリビュート) におけるファセット名を指定し、値には取りうる値を指定します。
 
-Response
+レスポンス
 ~~~~~~~~
 
-the response returned from the ``FacetedSearch`` object (by calling
-``.execute()``) is a subclass of the standard ``Response`` class that adds a
-property called ``facets`` which contains a dictionary with lists of buckets -
-each represented by a tuple of key, document cound and a flag indicating
-whether this value has been filtered on.
+``FacetedSearch`` オブジェクトの ``.execute()`` をコールすることで返却されるレスポンスは
+標準の ``Response`` クラスのサブクラスです。
+bucketsのリストの辞書を含む``facets``というプロパティが追加されています。
+これらはキー、ドキュメント数、値がフィルタリングされているかのフラグから成るタプルで表現されています。
 
-Example
+例
 -------
 
 .. code:: python
@@ -87,24 +87,24 @@ Example
 
     class BlogSearch(FacetedSearch):
         doc_types = [Article, ]
-        # fields that should be searched
+        # 検索に使用されるフィールド
         fields = ['tags', 'title', 'body']
 
         facets = {
-            # use bucket aggregations to define facets
+            # ファセットを定義するためにbucket集約を使用する
             'tags': Terms(field='tags'),
             'publishing_frequency': DateHistogram(field='published_from', interval='month')
         }
 
         def search(self):
-            # override methods to add custom pieces
+            # 部分的なカスタマイズのためにオーバーライドする
             s = super().search()
             return s.filter('range', publish_from={'lte': 'now/h'})
 
     bs = BlogSearch('python web', {'publishing_frequency': date(2015, 6)})
     response = bs.execute()
 
-    # access hits and other attributes as usual
+    # 通常通り、検索件数と他のアトリビュートにアクセスする
     print(response.hits.total, 'hits total')
     for hit in response:
         print(hit.meta.score, hit.title)
@@ -114,5 +114,3 @@ Example
 
     for (month, count, selected) in response.facets.publishing_frequency:
         print(month.strftime('%B %Y'), ' (SELECTED):' if selected else ':', count)
-
-

@@ -71,13 +71,13 @@ Search DSL
 
     print(s.to_dict())
 
-Queries
+クエリ
 ~~~~~~~
 
 
 
-The library provides classes for all Elasticsearch query types. Pass all the
-parameters as keyword arguments:
+このライブラリはElasticsearchのすべてのクエリタイプに対応するクラスを提供します。
+すべてのパラメータはキーワード引数として渡すことができます:
 
 .. code:: python
 
@@ -86,38 +86,38 @@ parameters as keyword arguments:
     # {"multi_match": {"query": "python django", "fields": ["title", "body"]}
     MultiMatch(query='python django', fields=['title', 'body'])
 
-You can use the ``Q`` shortcut to construct the instance using a name with
-parameters or the raw ``dict``:
+パラメータ付きの名前か生の ``dict`` を使ってインスタンスを構築するために、
+``Q`` をショートカットとして使用することができます:
 
 .. code:: python
 
     Q("multi_match", query='python django', fields=['title', 'body'])
     Q({"multi_match": {"query": "python django", "fields": ["title", "body"]})
 
-To add the query to the ``Search`` object, use the ``.query()`` method:
+クエリを ``Search`` オブジェクトに追加するためには、 ``.query()`` メソッドを使用します:
 
 .. code:: python
 
     q = Q("multi_match", query='python django', fields=['title', 'body'])
     s = s.query(q)
 
-The method also accepts all the parameters as the ``Q`` shortcut:
+このメソッドは全てのパラメータを ``Q`` ショートカットと同様に受け取ります:
 
 .. code:: python
 
     s = s.query("multi_match", query='python django', fields=['title', 'body'])
 
-If you already have a query object, or a ``dict`` representing one, you can
-just override the query used in the ``Search`` object:
+既にクエリオブジェクトやそれに相当する ``dict`` を持っている場合は、
+``Search`` オブジェクト内で使用されているqueryをオーバーライドすることができます:
 
 .. code:: python
 
     s.query = Q('bool', must=[Q('match', title='python'), Q('match', body='best')])
 
-Query combination
+クエリの組み合わせ
 ^^^^^^^^^^^^^^^^^
 
-Query objects can be combined using logical operators:
+論理演算子を使ってクエリオブジェクトを組み合わせることができます:
 
 .. code:: python
 
@@ -130,23 +130,21 @@ Query objects can be combined using logical operators:
     ~Q("match", "title"="python")
     # {"bool": {"must_not": [...]}}
 
-You can also use the ``+`` operator:
+``+`` 演算子を使う事もできます:
 
 .. code:: python
 
     Q("match", title='python') + Q("match", title='django')
     # {"bool": {"must": [...]}}
 
-When using the ``+`` operator with ``Bool`` queries, it will merge them into a
-single ``Bool`` query:
+``Bool`` クエリとともに ``+`` 演算子を使う場合は、単一の ``Bool`` クエリにマージされます:
 
 .. code:: python
 
     Q("bool") + Q("bool")
     # {"bool": {"..."}} 
 
-When you call the ``.query()`` method multiple times, the ``+`` operator will
-be used internally:
+``.query()`` メソッドを複数回呼ぶときは、内部的に ``+`` 演算子が使用されます:
 
 .. code:: python
 
@@ -154,8 +152,8 @@ be used internally:
     print(s.to_dict())
     # {"query": {"bool": {...}}}
 
-If you want to have precise control over the query form, use the ``Q`` shortcut
-to directly construct the combined query:
+クエリの生成を正確にコントロールしたい場合は、
+``Q`` ショートカットを使って組み合わせクエリを直接生成します。
 
 .. code:: python
 
