@@ -1,84 +1,81 @@
 .. _persistence:
 
-Persistence
+永続化
 ===========
 
-You can use the dsl library to define your mappings and a basic persistent
-layer for your application.
+DSLライブラリを使って、アプリケーションにおけるマッピングと基本的な永続化レイヤを定義することができます。
 
-Mappings
+マッピング
 --------
 
-The mapping definition follows a similar pattern to the query dsl:
+マッピングの定義はクエリのDSLと同様のパターンに従います:
 
 .. code:: python
 
     from elasticsearch_dsl import Mapping, String, Nested
 
-    # name your type
+    # タイプ追加
     m = Mapping('my-type')
 
-    # add fields
+    # フィールドの追加
     m.field('title', 'string')
 
-    # you can use multi-fields easily
+    # 複数のフィールドを簡単に扱えます
     m.field('category', 'string', fields={'raw': String(index='not_analyzed')})
 
-    # you can also create a field manually
+    # 手動でフィールドを生成することもできます
     comment = Nested()
     comment.field('author', String())
     comment.field('created_at', Date())
 
-    # and attach it to the mapping
+    # それをマッピングに追加します
     m.field('comments', comment)
 
-    # you can also define mappings for the meta fields
+    # メタフィールドにマッピングを定義することもできます
     m.meta('_all', enabled=False)
 
-    # save the mapping into index 'my-index'
+    # マッピングを'my-index'インデックスに保存します
     m.save('my-index')
 
 .. note::
 
-    By default all fields (with the exception of ``Nested``) will expect single
-    values. You can always override this expectation during the field
-    creation/definition by passing in ``multi=True`` into the constructor
-    (``m.field('tags', String(index='not_analyzed', multi=True))``). Then the
-    value of the field, even if the field hasn't been set, will be an empty
-    list enabling you to write ``doc.tags.append('search')``.
+    デフォルトでは、(``Nested`` を除いて) すべてのフィールドは単一の値を要求します。
+    フィールドを作成あるいは定義する際に、コンストラクタに対して ``multi=True`` を渡すことで、
+    複数の値を受け取るようにオーバーライドすることは可能です。
+    (``m.field('tags', String(index='not_analyzed', multi=True))``)
+    フィールドが設定されていない場合は、フィールドの値は空のリストになります。
+    これにより、 ``doc.tags.append('search')`` と記述することを可能にしています。
 
-Especially if you are using dynamic mappings it might be useful to update the
-mapping based on an existing type in Elasticsearch, or create the mapping
-directly from an existing type:
+特に、動的なマッピングを利用する場合は、
+Elasticsearchにおける既存のタイプに基いてマッピングを更新するか、
+既存のタイプから直接マッピングを生成することができれば便利かもしれません:
 
 .. code:: python
 
-    # get the mapping from our production cluster
+    # prodクラスタからマッピングを取得する
     m = Mapping.from_es('my-index', 'my-type', using='prod')
 
-    # update based on data in QA cluster
+    # QAクラスタ内のデータに基いて更新する
     m.update_from_es('my-index', using='qa')
 
-    # update the mapping on production
+    # prodクラスタのマッピングを更新する
     m.save('my-index', using='prod')
 
-Common field options:
+共通のフィールドオプション:
 
 ``multi``
-  If set to ``True`` the field's value will be set to ``[]`` at first access.
+  ``True`` を設定すると、初回のアクセス時にフィールドの値に ``[]`` が設定されます。
 
 ``required``
-  Indicates if a field requires a value for the document to be valid.
+  ドキュメントにおいてフィールドが値を必要とするかどうかを示します。
 
-Analysis
+解析
 --------
 
-To specify ``analyzer`` values for ``String`` fields you can just use the name
-of the analyzer (as a string) and either rely on the analyzer being defined
-(like built-in analyzers) or define the analyzer yourself manually.
+``String`` フィールドに ``analyzer`` の値を指定するために、アナライザの名前を文字列で指定します。
+このとき、ビルトインのアナライザのような既に定義されたアナライザを使うか、手動でアナライザを定義することもあります。
 
-Alternatively you can create your own analyzer and have the persistence layer
-handle its creation:
+自身で定義したアナライザを生成し、生成のための永続化レイヤを持つことが可能です:
 
 .. code:: python
 
@@ -89,21 +86,18 @@ handle its creation:
         filter=['lowercase']
     )
 
-Each analysis object needs to have a name (``my_analyzer`` and ``trigram`` in
-our example) and tokenizers, token filters and char filters also need to
-specify type (``nGram`` in our example).
+それぞれの解析オブジェクトは名前(例では ``my_analyzer`` と ``trigram``) を持ち、
+トークナイザ、トークンフィルタ、文字列フィルタはタイプ(例では ``nGram``) の指定を必要とします。
 
 .. note::
 
-    When creating a mapping which relies on a custom analyzer the index must
-    either not exist or be closed. To create multiple ``DocType``-defined
-    mappings you can use the :ref:`index` object.
+    カスタムアナライザに依存するマッピングを生成する場合は、インデックスが存在しないか停止している状態にしなければなりません。
+    マッピングが定義された複数の ``DocType`` を生成したいときは、:ref:`index` オブジェクトを使用します。
 
-DocType
+タイプ
 -------
 
-If you want to create a model-like wrapper around your documents, use the
-``DocType`` class:
+ドキュメントを扱うためにモデルのようなラッパを生成したい場合は ``DocType`` クラスを使用します:
 
 .. code:: python
 
@@ -145,129 +139,119 @@ If you want to create a model-like wrapper around your documents, use the
             return super().save(** kwargs)
 
 
-Document life cycle
+ドキュメントのライフサイクル
 ~~~~~~~~~~~~~~~~~~~
 
-To create a new ``Post`` document just instantiate the class and pass in any
-fields you wish to set, you can then use standard attribute setting to
-change/add more fields. Note that you are not limited to the fields defined
-explicitly:
+新しい ``Post`` ドキュメントを生成するために、クラスをインスタンス化し、フィールドに指定したい値を渡します。
+標準のアトリビュート設定を使って、フィールドを追加したり変更することができます。
+明示的に定義されたフィールドに限定されないことに注意してください:
 
 .. code:: python
 
-    # instantiate the document
+    # ドキュメントのインスタンス化
     first = Post(title='My First Blog Post, yay!', published=True)
-    # assign some field values, can be values or lists of values
+    # フィールドの値の指定(値か値のリスト)
     first.category = ['everything', 'nothing']
-    # every document has an id in meta
+    # すべてのドキュメントはmetaの中にidを持ちます
     first.meta.id = 47
 
 
-    # save the document into the cluster
+    # クラスタにドキュメントを保存します
     first.save()
 
 
-All the metadata fields (``id``, ``parent``, ``routing``, ``index`` etc) can be
-accessed (and set) via a ``meta`` attribute or directly using the underscored
-variant:
+すべてのメタデータフィールド( ``id`` 、 ``parent`` 、 ``routing`` 、 ``index`` など) には、
+metaアトリビュートを使うか、アンダースコアをつけた変数名で直接アクセスすることができます:
 
 .. code:: python
 
     post = Post(meta={'id': 42})
 
-    # prints 42, same as post._id
+    # 42を表示(post.idでも同様)
     print(post.meta.id)
 
-    # override default index
+    # デフォルトのインデックスをオーバーライド
     post._index = 'my-blog'
 
 .. note::
 
-    Having all metadata accessible through ``meta`` means that this name is
-    reserved and you shouldn't have a field called ``meta`` on your document.
-    If you, however, need it you can still access the data using the get item
-    (as opposed to attribute) syntax: ``post['meta']``.
+    すべてのメタデータにアクセス可能な ``meta`` を持っているということは、この名前は既に予約されており、
+    ドキュメントにおいて ``meta`` というフィールドを持つべきではないことを意味しています。
+    しかし、もし必要なのであればアイテムを取得するシンタックスとして ``post['meta']`` を使用してデータにアクセスできます。
 
-To retrieve an existing document use the ``get`` class method:
+既存のドキュメントを検索する場合は、 ``get`` クラスメソッドを使用します:
 
 .. code:: python
 
-    # retrieve the document
+    # ドキュメントを検索する
     first = Post.get(id=42)
-    # now we can call methods, change fields, ...
+    # フィールドの変更などが可能
     first.add_comment('me', 'This is nice!')
-    # and save the changes into the cluster again
+    # クラスタにもう一度変更を保存
     first.save()
 
-    # you can also update just individual fields which will call the update API
-    # and also update the document in place
+    # update APIをコールすることで、特定のフィールドを修正し、その場でドキュメントを更新できます
     first.update(published=True, published_by='me')
 
-If the document is not found in elasticsearch an exception
-(``elasticsearch.NotFoundError``) will be raised. If you wish to return
-``None`` instead just pass in ``ignore=404`` to supress the exception:
+Elasticsearch内にドキュメントが見つからない場合は例外(``elasticsearch.NotFoundError``) が発生します。
+エラーの代わりに ``None`` を返して欲しい場合は、引数として ``ignore=404`` を渡します:
 
 .. code:: python
 
     p = Post.get(id='not-in-es', ignore=404)
     p is None
 
-All the information about the ``DocType``, including its ``Mapping`` can be
-accessed through the ``_doc_type`` attribute of the class:
+``Mapping`` を含む ``DocType`` に関するすべての情報には、 ``_doc_type`` アトリビュートを通してアクセスできます:
 
 .. code:: python
 
-    # name of the type and index in elasticsearch
+    # Elasticsearchにおけるタイプ名とインデックス名
     Post._doc_type.name
     Post._doc_type.index
     
-    # the raw Mapping object
+    # 生のマッピングオブジェクト
     Post._doc_type.mapping
 
-    # the optional name of the parent type (if defined)
+    # 親にあたるタイプの名称(定義されている場合)
     Post._doc_type.parent
 
-The ``_doc_type`` attribute is also home to the ``refresh`` method which will
-update the mapping on the ``DocType`` from elasticsearch. This is very useful
-if you use dynamic mappings and want the class to be aware of those fields (for
-example if you wish the ``Date`` fields to be properly (de)serialized):
+``_doc_type`` アトリビュートは、Elasticsearchの ``DocType`` においてマッピングを更新するための ``refresh`` メソッドを持ちます。
+これは、動的マッピングを使用していて、クラスにフィールドを認識させたいときに便利です(たとえば、 ``Date`` フィールドを適切にシリアライズしたいとき など) :
 
 .. code:: python
 
     Post._doc_type.refresh()
 
-Search
+検索
 ~~~~~~
 
-To search for this document type, use the ``search`` class method:
+対象のドキュメントタイプの検索をしたい場合は、 ``search`` クラスメソッドを使用します:
 
 .. code:: python
 
-    # by calling .search we get back a standard Search object
+    # .search をコールすることで、標準の検索オブジェクトを取得
     s = Post.search()
-    # the search is already limited to the index and doc_type of our document
+    # 検索時には既にインデックスとタイプが制限されています
     s = s.filter('term', published=True).query('match', title='first')
 
 
     results = s.execute()
 
-    # when you execute the search the results are wrapped in your document class (Post)
+    # 検索を実行したとき、検索結果はドキュメントのクラス(Post) 内でラップされています
     for posts in results:
         print(post.meta.score, post.title)
 
-Alternatively you can just take a ``Search`` object and restrict it to return
-our document type, wrapped in correct class:
+あるいは、 ``Search`` オブジェクトを定義してから、特定のドキュメントタイプを返却するように制限することもできます:
 
 .. code:: python
 
     s = Search()
     s = s.doc_type(Post)
 
-You can also combine document classes with standard doc types (just strings),
-which will be treated as before. You can also pass in multiple ``DocType``
-subclasses and each document in the response will be wrapped in it's class.
+ドキュメントのクラスを標準のタイプ(文字列で表現されたもの)と複合することもできます。
+複数の ``DocType`` サブクラスを渡すと、レスポンスにおけるそれぞれのドキュメントはそれぞれのクラスでラップされます。
 
-To delete a document just call its ``delete`` method:
+ドキュメントを削除したい場合は、 ``delete`` メソッドを使用します:
 
 .. code:: python
 
