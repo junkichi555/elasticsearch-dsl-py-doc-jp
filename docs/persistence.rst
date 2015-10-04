@@ -258,31 +258,29 @@ Elasticsearch内にドキュメントが見つからない場合は例外(``elas
     first = Post.get(id=42)
     first.delete()
 
-``class Meta`` options
+``class Meta`` オプション
 ~~~~~~~~~~~~~~~~~~~~~~
 
-In the ``Meta`` class inside your document definition you can define various
-metadata for your document:
+ドキュメント定義内の ``Meta`` クラスにおいて、様々なメタデータを定義することができます:
 
 ``doc_type``
-  name of the doc_type in elasticsearch. By default it will be constructed from
-  the class name (MyDocument -> my_document)
+  Elasticsearchにおけるタイプの名前
+  デフォルト: クラス名から生成(MyDocument -> my_document)
 
 ``index``
-  default index for the document, by default it is empty and every operation
-  such as ``get`` or ``save`` requires an explicit ``index`` parameter
+  ドキュメントにおけるデフォルトのインデックス
+  デフォルト: 空で、 ``get`` や ``save`` などのすべての操作で ``index`` パラメータが必須
 
 ``using``
-  default connection alias to use, defaults to ``'default'``
+  デフォルトで使用されるコネクションのエイリアス
+  デフォルト: ``'default'``
 
 ``mapping``
-  optional instance of ``Mapping`` class to use as base for the mappings
-  created from the fields on the document class itself.
+  オプションとして使用される ``Mapping`` クラスのインスタンス
+  ドキュメントのクラス上でフィールドから生成されるマッピングの基礎になる
 
-Any attributes on the ``Meta`` class that are instance of ``MetaField`` will be
-used to control the mapping of the meta fields (``_all``, ``_parent`` etc).
-Just name the parameter (without the leading underscore) as the field you wish
-to map and pass any parameters to the ``MetaField`` class:
+``Meta`` クラスにおけるアトリビュート(``MetaField`` のインスタンス) はメタフィールド(``_all`` 、 ``_parent`` など) のマッピングを操作するために使用されます。
+変数名として対象のフィールド名のアンダースコアを除く名前を使用し、 ``MetaField`` クラスに必要なパラメータを渡します:
 
 .. code:: python
 
@@ -296,14 +294,12 @@ to map and pass any parameters to the ``MetaField`` class:
 
 .. _index:
 
-Index
+インデックス
 -----
 
-``Index`` is a class responsible for holding all the metadata related to an
-index in elasticsearch - mappings and settings. It is most useful when defining
-your mappings since it allows for easy creation of multiple mappings at the
-same time. This is especially useful when setting up your elasticsearch objects
-in a migration:
+``Index`` はマッピングや様々な設定など、Elasticsearchのインデックスに関連するすべてのメタデータを保持するクラスです。
+複数のマッピングを同時に生成可能なため、マッピングを定義する際に有用です。
+特に、移行においてElasticsearchのオブジェクトをセットアップするときに便利です。
 
 .. code:: python
 
@@ -311,33 +307,32 @@ in a migration:
 
     blogs = Index('blogs')
 
-    # define custom settings
+    # カスタムの設定を定義
     blogs.settings(
         number_of_shards=1,
         number_of_replicas=0
     )
 
-    # define aliases
+    # エイリアスを定義
     blogs.aliases(
         old_blogs={}
     )
 
-    # register a doc_type with the index
+    # インデックスに対してタイプを登録
     blogs.doc_type(Post)
 
-    # can also be used as class decorator when defining the DocType
+    # タイプを定義する際にはデコレータを利用することも可能
     @blogs.doc_type
     class Post(DocType):
         title = String()
 
-    # delete the index, ignore if it doesn't exist
+    # インデックスを削除し、存在しない場合は無視
     blogs.delete(ignore=404)
 
-    # create the index in elasticsearch
+    # Elasticsearchにインデックスを生成
     blogs.create()
 
-You can also set up a template for your indices and use the ``clone`` method to
-create specific copies:
+テンプレートとなるインデックスを構成し、 ``clone`` メソッドを使用してコピーすることも可能です:
 
 .. code:: python
 
@@ -345,11 +340,10 @@ create specific copies:
     blogs.settings(number_of_shards=2)
     blogs.doc_type(Post)
 
-    # create a copy of the index with different name
+    # インデックスのコピーを異なる名前で生成
     company_blogs = blogs.clone('company-blogs')
 
-    # create a different copy on different cluster
+    # 別のクラスタに異なるコピーを生成
     dev_blogs = blogs.clone('blogs', using='dev')
-    # and change its settings
+    # 設定を変更
     dev_blogs.setting(number_of_shards=1)
-
