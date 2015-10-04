@@ -208,7 +208,7 @@ Elasticsearch内にドキュメントが見つからない場合は例外(``elas
     # Elasticsearchにおけるタイプ名とインデックス名
     Post._doc_type.name
     Post._doc_type.index
-    
+
     # 生のマッピングオブジェクト
     Post._doc_type.mapping
 

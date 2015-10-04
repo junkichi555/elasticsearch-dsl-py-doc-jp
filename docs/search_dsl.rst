@@ -142,7 +142,7 @@ Search DSL
 .. code:: python
 
     Q("bool") + Q("bool")
-    # {"bool": {"..."}} 
+    # {"bool": {"..."}}
 
 ``.query()`` メソッドを複数回呼ぶときは、内部的に ``+`` 演算子が使用されます:
 
@@ -426,7 +426,7 @@ Search DSL
 集約
 ~~~~~~~~~~~~
 
-集約の結果には ``aggregations`` プロパティを通してアクセスします。
+集約の結果には ``aggregations`` プロパティを通してアクセスします:
 
 .. code:: python
 
