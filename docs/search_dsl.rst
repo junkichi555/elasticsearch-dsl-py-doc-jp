@@ -1,3 +1,10 @@
+--------------
+
+| 原文: Search DSL
+| https://github.com/elastic/elasticsearch-dsl-py/blob/master/docs/search_dsl.rst
+
+--------------
+
 検索のためのDSL
 ==========
 

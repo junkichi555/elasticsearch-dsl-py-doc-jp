@@ -1,3 +1,10 @@
+--------------
+
+| 原文: Configuration
+| https://github.com/elastic/elasticsearch-dsl-py/blob/master/docs/configuration.rst
+
+--------------
+
 設定
 =============
 

@@ -1,3 +1,10 @@
+--------------
+
+| 原文: Elasticsearch DSL
+| https://github.com/elastic/elasticsearch-dsl-py/blob/master/docs/index.rst
+
+--------------
+
 Elasticsearch DSL
 =================
 
@@ -160,7 +167,7 @@ Elasticsearch DSLは、ドキュメントをPythonのオブジェクトとして
 
   * 他のAPIを利用するために低水準のクライアントにアクセスする
 
-`永続化 <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/persistence.rst>`_ の章でさらに詳細を知ることができます。
+` 永続化 <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/persistence.rst>`_ の章でさらに詳細を知ることができます。
 
 
 ビルド済みのファセット検索
@@ -203,7 +210,7 @@ Elasticsearch DSLは、ドキュメントをPythonのオブジェクトとして
     for (month, count, selected) in response.facets.publishing_frequency:
         print(month.strftime('%B %Y'), ' (SELECTED):' if selected else ':', count)
 
-`faceted_search <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/faceted_search.rst>`_ の章でさらに詳細を知ることができます。
+` ファセット検索 <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/faceted_search.rst>`_ の章でさらに詳細を知ることができます。
 
 ``elasticsearch-py`` からの移行
 -----------------------------------
@@ -244,6 +251,7 @@ limitations under the License.
 
 コンテンツ
 --------
+
 | `設定 <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/configuration.rst>`_
 | `検索のためのDSL <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/search_dsl.rst>`_
 | `永続化 <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/persistence.rst>`_

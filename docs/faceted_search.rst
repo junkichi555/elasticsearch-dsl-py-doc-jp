@@ -1,4 +1,9 @@
-.. _faceted_search:
+--------------
+
+| 原文: Faceted Search
+| https://github.com/elastic/elasticsearch-dsl-py/blob/master/docs/faceted_search.rst
+
+--------------
 
 ファセット検索
 ==============

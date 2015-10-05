@@ -1,4 +1,9 @@
-.. _persistence:
+--------------
+
+| 原文: Persistence
+| https://github.com/elastic/elasticsearch-dsl-py/blob/master/docs/persistence.rst
+
+--------------
 
 永続化
 ===========
