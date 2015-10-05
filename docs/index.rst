@@ -167,8 +167,8 @@ Elasticsearch DSLは、ドキュメントをPythonのオブジェクトとして
 
   * 他のAPIを利用するために低水準のクライアントにアクセスする
 
-` 永続化 <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/persistence.rst>`_ の章でさらに詳細を知ることができます。
-
+| 永続化の章でさらに詳細を知ることができます。
+| https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/persistence.rst
 
 ビルド済みのファセット検索
 ------------------------
@@ -210,7 +210,8 @@ Elasticsearch DSLは、ドキュメントをPythonのオブジェクトとして
     for (month, count, selected) in response.facets.publishing_frequency:
         print(month.strftime('%B %Y'), ' (SELECTED):' if selected else ':', count)
 
-` ファセット検索 <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/faceted_search.rst>`_ の章でさらに詳細を知ることができます。
+| ファセット検索の章でさらに詳細を知ることができます。
+| https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/faceted_search.rst
 
 ``elasticsearch-py`` からの移行
 -----------------------------------
