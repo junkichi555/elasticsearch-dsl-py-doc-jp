@@ -2,7 +2,7 @@ Elasticsearch DSL
 =================
 
 Elasticsearch DSLは、Elasticsearchのクエリ記述や実行を手助けすることを目的とした高水準ライブラリです。
-公式の低水準なクライアント(``elasticsearch-py``) の上位レイヤに位置づけられます。
+公式の低水準なクライアント（ ``elasticsearch-py`` ）の上位レイヤに位置づけられます。
 
 Elasticsearch DSLは、より便利で慣用的なクエリの記述や操作の手段を提供します。
 用語や構造はElasticsearchのJSON DSLに似ています。
@@ -160,7 +160,7 @@ Elasticsearch DSLは、ドキュメントをPythonのオブジェクトとして
 
   * 他のAPIを利用するために低水準のクライアントにアクセスする
 
-:ref:`persistence` の章でさらに詳細を知ることができます。
+`persistence <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/persistence.rst>`_ の章でさらに詳細を知ることができます。
 
 
 ビルド済みのファセット検索
@@ -203,7 +203,7 @@ Elasticsearch DSLは、ドキュメントをPythonのオブジェクトとして
     for (month, count, selected) in response.facets.publishing_frequency:
         print(month.strftime('%B %Y'), ' (SELECTED):' if selected else ':', count)
 
-:ref:`faceted_search` の章でさらに詳細を知ることができます。
+`faceted_search <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/faceted_search.rst>`_ の章でさらに詳細を知ることができます。
 
 ``elasticsearch-py`` からの移行
 -----------------------------------
@@ -244,13 +244,8 @@ limitations under the License.
 
 コンテンツ
 --------
-
-.. toctree::
-   :maxdepth: 2
-
-   configuration
-   search_dsl
-   persistence
-   faceted_search
-   Changelog
-
+`configuration <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/configuration.rst>`_
+`search_dsl <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/search_dsl.rst>`_
+`persistence <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/persistence.rst>`_
+`faceted_search <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/faceted_search.rst>`_
+Changelog

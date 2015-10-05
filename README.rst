@@ -3,13 +3,15 @@
 オリジナルのリポジトリの ``docs`` のみを日本語に翻訳しています。
 https://github.com/elastic/elasticsearch-dsl-py
 
+対象バージョン: 0.0.8 (2015-08-28)
+
 --------------
 
 Elasticsearch DSL
 =================
 
 Elasticsearch DSLは、Elasticsearchのクエリ記述や実行を手助けすることを目的とした高水準ライブラリです。
-公式の低水準なクライアント(``elasticsearch-py``) の上位レイヤに位置づけられます。
+公式の低水準なクライアント（ ``elasticsearch-py`` ）の上位レイヤに位置づけられます。
 
 Elasticsearch DSLは、より便利で慣用的なクエリの記述や操作の手段を提供します。
 用語や構造はElasticsearchのJSON DSLに似ています。
@@ -93,7 +95,7 @@ Elasticsearch DSLは、ドキュメントをPythonのオブジェクトとして
 
 見てわかる通り、このライブラリは以下の点に留意して書かれています:
 
-  * クエリの名称("match"など) を使って 適切な ``Query`` オブジェクトを生成する
+  * クエリの名称（"match"など）を使って 適切な ``Query`` オブジェクトを生成する
 
   * 複合の ``bool`` クエリとしてクエリをまとめる
 
@@ -167,7 +169,7 @@ Elasticsearch DSLは、ドキュメントをPythonのオブジェクトとして
 
   * 他のAPIを利用するために低水準のクライアントにアクセスする
 
-このドキュメントのチャプターをさらに読み進めればさらに詳細を見ることができます。
+このドキュメントをさらに読み進めればさらに詳細を見ることができます。
 
 ``elasticsearch-py`` からの移行
 -----------------------------------
@@ -191,9 +193,8 @@ Python DSLの恩恵を受けるためにすべてのアプリケーションを�
 ドキュメント
 -------------
 
-こちらのドキュメントをご覧ください
-
-https://elasticsearch-dsl.readthedocs.org.
+| こちらのドキュメントをご覧ください。
+| https://elasticsearch-dsl.readthedocs.org.
 
 ライセンス
 -------
