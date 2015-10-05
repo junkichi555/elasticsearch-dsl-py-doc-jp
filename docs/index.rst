@@ -160,7 +160,7 @@ Elasticsearch DSLは、ドキュメントをPythonのオブジェクトとして
 
   * 他のAPIを利用するために低水準のクライアントにアクセスする
 
-`persistence <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/persistence.rst>`_ の章でさらに詳細を知ることができます。
+`永続化 <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/persistence.rst>`_ の章でさらに詳細を知ることができます。
 
 
 ビルド済みのファセット検索
@@ -244,8 +244,7 @@ limitations under the License.
 
 コンテンツ
 --------
-`configuration <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/configuration.rst>`_
-`search_dsl <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/search_dsl.rst>`_
-`persistence <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/persistence.rst>`_
-`faceted_search <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/faceted_search.rst>`_
-Changelog
+| `設定 <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/configuration.rst>`_
+| `検索のためのDSL <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/search_dsl.rst>`_
+| `永続化 <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/persistence.rst>`_
+| `ファセット検索 <https://github.com/nanakenashi/elasticsearch-dsl-py-doc-jp/blob/master/docs/faceted_search.rst>`_

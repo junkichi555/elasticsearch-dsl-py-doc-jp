@@ -5,10 +5,10 @@
 最も簡単で有用な方法は、APIコールのたびに使用されるデフォルトのコネクションを1つ定義することです。
 明示的に他のコネクションを渡してやる必要はありません。
 
-``elasticsearch_dsl`` を使用する際は、添付のシリアライザ(``elasticsearch_dsl.serializer.serializer``) の使用を推奨します。
+``elasticsearch_dsl`` を使用する際は、添付のシリアライザ（ ``elasticsearch_dsl.serializer.serializer`` ）の使用を推奨します。
 これで毎回オブジェクトがjsonに適切にシリアライズされることが確認できます。
 ここで紹介する ``create_connection`` メソッドは、明示的にシリアライザを指定しなくても、自動でこのシリアライズを使用します。
-(そして ``create_connection`` メソッドは ``configure`` メソッドで内部的に使用されています)
+（そして ``create_connection`` メソッドは ``configure`` メソッドで内部的に使用されています）
 
 .. note::
 
@@ -47,7 +47,7 @@
 
     connections.connections.create_connection(hosts=['localhost'], timeout=20)
 
-このとき、いくつかのキーワード引数(例では ``hosts`` と ``timeout`` ) が ``Elasticsearch`` クラスに渡されます。
+このとき、いくつかのキーワード引数（例では ``hosts`` と ``timeout`` ）が ``Elasticsearch`` クラスに渡されます。
 
 複数のクラスタ
 -----------------
